@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Apple Store Clone</title>
+    <style>
+        /* CSS Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+        }
+
+        a {
+            text-decoration: none;
+            color: #0066cc;
+            font-weight: 500;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Top Promo Banner */
+        .promo-banner {
+            background-color: #f5f5f7;
+            text-align: center;
+            padding: 12px 20px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #1d1d1f;
+            border-bottom: 1px solid #d2d2d7;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Store Header - Responsive Flexbox */
+        .store-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 60px 0 40px 0;
+        }
+
+        .store-title {
+            font-size: clamp(40px, 5vw, 56px); 
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: #1d1d1f;
+        }
+
+        .store-subtitle {
+            text-align: right;
+        }
+
+        .store-subtitle h3 {
+            font-size: clamp(18px, 2.5vw, 24px);
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .store-subtitle p {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        /* Categories Nav (Animations Removed) */
+        .categories {
+            display: flex;
+            gap: clamp(20px, 4vw, 50px);
+            overflow-x: auto;
+            padding-bottom: 30px;
+            scrollbar-width: none; 
+            -webkit-overflow-scrolling: touch; 
+        }
+        
+        .categories::-webkit-scrollbar {
+            display: none; 
+        }
+
+        .category-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 80px;
+            cursor: pointer;
+            /* No transitions applied */
+        }
+
+        .category-item .device-img {
+            height: 65px;
+            object-fit: contain;
+            margin-bottom: 12px;
+            /* No transitions applied */
+        }
+
+        .category-item .category-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1d1d1f;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        /* Shared Section Headers */
+        .section-header {
+            font-size: clamp(22px, 3vw, 28px);
+            font-weight: 700;
+            margin-bottom: 30px;
+            letter-spacing: -0.005em;
+            margin-top: 40px;
+        }
+
+        .section-header span {
+            color: #86868b;
+            font-weight: 600;
+        }
+
+        /* General Card Styles (Ultra Slow, Minimal, Smooth Animations) */
+        .cards-container {
+            display: flex;
+            gap: 24px;
+            overflow-x: auto;
+            padding-bottom: 40px;
+            padding-top: 10px; 
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .cards-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .card {
+            flex: 0 0 clamp(300px, 80vw, 400px); 
+            height: 500px;
+            border-radius: 28px; 
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            scroll-snap-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            /* Increased duration to 1.2s for extremely slow, premium ease */
+            transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+            cursor: pointer;
+        }
+
+        .card:hover {
+            /* Kept exceedingly minimal to prevent jarring jumps */
+            transform: scale(1.01) translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        .card.dark { background-color: #000; color: #f5f5f7; }
+        .card.light { background-color: #fff; color: #1d1d1f; }
+
+        /* ENSURES TEXT IS ALWAYS ON TOP */
+        .card-content {
+            position: relative;
+            z-index: 10; 
+        }
+
+        .card-tag {
+            font-size: 12px;
+            font-weight: 700;
+            color: #bf4800;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .card h3 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.01em;
+            line-height: 1.15;
+        }
+
+        .card p.desc {
+            font-size: 17px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .card p.price { 
+            font-size: 14px; 
+            font-weight: 500;
+            color: #86868b; 
+        }
+        .card.dark p.price { color: #a1a1a6; }
+
+        /* ENSURES IMAGE IS ALWAYS AT THE BACK */
+        .card .product-img {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 350px;
+            object-fit: cover;
+            z-index: 1; 
+            /* Static image, no transition/hover zoom needed */
+        }
+
+        /* Bottom-Text Product Cards (Accessories) */
+        .card-product {
+            justify-content: flex-end; 
+        }
+
+        .card-product .product-img-center {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 240px;
+            width: auto;
+            object-fit: contain;
+            z-index: 1; /* Behind text */
+            /* Static image, no transition/hover zoom needed */
+        }
+
+        /* Text overlay for bottom cards */
+        .card-content-bottom {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+        }
+
+        .card-content-bottom h4 {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.3;
+            color: #1d1d1f;
+        }
+
+        .card-content-bottom .price {
+            font-size: 12px;
+            font-weight: 500;
+            color: #1d1d1f;
+            margin-top: 20px;
+        }
+
+        /* Color Swatches */
+        .swatches {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            position: absolute;
+            bottom: 150px;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .swatch {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.15);
+        }
+
+        /* Special Gradients */
+        .txt-ai-gradient {
+            background: linear-gradient(90deg, #3278FF, #D145C2, #FF7B42);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- Difference Section --- */
+        .difference-section {
+            margin-top: 20px;
+            padding-bottom: 40px;
+        }
+
+        .diff-cards-container {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding-bottom: 40px;
+            padding-top: 10px;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+        }
+        
+        .diff-cards-container::-webkit-scrollbar { display: none; }
+
+        .diff-card {
+            flex: 0 0 310px;
+            background: #fff;
+            border-radius: 20px;
+            padding: 30px;
+            min-height: 220px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+            scroll-snap-align: start;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .diff-card:hover {
+            transform: scale(1.01) translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        .diff-card svg {
+            margin-bottom: 16px;
+        }
+
+        .diff-card h4 {
+            font-size: 20px;
+            font-weight: 700; 
+            line-height: 1.3;
+            color: #1d1d1f;
+        }
+
+        .diff-card .txt-blue { color: #0066cc; }
+        .diff-card .txt-purple { color: #bf48ba; }
+        .diff-card .txt-gradient {
+            background: linear-gradient(90deg, #ff3b30, #ff9500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .diff-card .txt-green { color: #1f8b3c; }
+
+        /* --- Help Section --- */
+        .help-section {
+            margin-top: 20px;
+            padding-bottom: 80px;
+        }
+
+        .help-cards-container {
+            display: flex;
+            gap: 24px;
+            overflow-x: auto;
+            padding-bottom: 40px;
+            padding-top: 10px;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+        }
+
+        .help-cards-container::-webkit-scrollbar { display: none; }
+
+        .help-card {
+            flex: 0 0 clamp(320px, 80vw, 480px);
+            height: 550px;
+            border-radius: 28px;
+            position: relative;
+            overflow: hidden;
+            scroll-snap-align: start;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            background-color: #fff;
+            transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+            cursor: pointer;
+        }
+
+        .help-card:hover {
+            transform: scale(1.01) translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        .help-card-content {
+            padding: 35px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .help-card h3 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+        }
+
+        .help-card p {
+            font-size: 17px;
+            font-weight: 500;
+            line-height: 1.4;
+            color: #1d1d1f;
+        }
+
+        .help-tag {
+            font-size: 12px;
+            font-weight: 700;
+            color: #86868b;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .help-img {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 65%;
+            object-fit: cover;
+            object-position: bottom;
+            z-index: 1; /* Behind text */
+        }
+
+        /* --- Quick Links Section --- */
+        .quick-links-section {
+            padding: 40px 0;
+        }
+
+        .quick-links-section .section-header {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #1d1d1f;
+        }
+
+        .pill-container {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .pill-btn {
+            display: inline-block;
+            padding: 10px 22px;
+            border: 1px solid #1d1d1f;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 600; 
+            color: #1d1d1f;
+            background-color: transparent;
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            cursor: pointer;
+        }
+
+        .pill-btn:hover {
+            background-color: #1d1d1f;
+            color: #fff;
+            text-decoration: none;
+            transform: scale(1.02);
+        }
+
+        /* --- Footnotes Section --- */
+        .footnotes-section {
+            padding: 40px 0 20px;
+            font-size: 12px;
+            font-weight: 400; 
+            color: #86868b;
+            line-height: 1.5;
+            border-bottom: 1px solid #d2d2d7;
+            margin-bottom: 20px;
+        }
+
+        .footnotes-section p {
+            margin-bottom: 12px;
+        }
+
+        .footnotes-section a {
+            color: #424245;
+            text-decoration: underline;
+        }
+
+        .footnotes-section a:hover {
+            color: #1d1d1f;
+        }
+
+        /* --- Global Footer --- */
+        .apple-footer {
+            padding: 0 0 40px 0;
+            font-size: 12px;
+            color: #424245;
+        }
+
+        .footer-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #d2d2d7;
+            margin-bottom: 25px;
+        }
+
+        .footer-directory {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        .footer-col h4 {
+            font-size: 12px;
+            font-weight: 700; 
+            color: #1d1d1f;
+            margin-bottom: 10px;
+            margin-top: 20px;
+        }
+        
+        .footer-col h4:first-child {
+            margin-top: 0;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+
+        .footer-col li {
+            margin-bottom: 8px;
+        }
+
+        .footer-col a {
+            color: #424245;
+            transition: color 0.3s ease;
+        }
+
+        .footer-col a:hover {
+            color: #1d1d1f;
+            text-decoration: underline;
+        }
+
+        .footer-base {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #d2d2d7;
+        }
+
+        .shop-ways {
+            margin-bottom: 10px;
+        }
+
+        .shop-ways a {
+            color: #0066cc;
+            text-decoration: underline;
+        }
+
+        .legal-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .legal-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .legal-links a { color: #424245; transition: color 0.3s ease; }
+        .legal-links a:hover { color: #1d1d1f; text-decoration: underline; }
+        .legal-links span { color: #d2d2d7; }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .store-header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 40px 0 20px 0;
+            }
+            .store-subtitle { text-align: left; }
+            .card, .help-card { height: 450px; }
+            .footer-directory { grid-template-columns: 1fr; gap: 5px; }
+            .footer-col h4 { margin-top: 15px; }
+            .legal-row { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="promo-banner">
+        Get up to 6 months of No Cost EMI plus up to ₹10000.00 instant cashback* on selected products with eligible cards. <a href="#">See offers ⊕</a>
+    </div>
+
+    <div class="container">
+        <header class="store-header">
+            <h1 class="store-title">Store</h1>
+            <div class="store-subtitle">
+                <h3>The best way to buy the<br>products you love.</h3>
+                <p><a href="#">Connect with a Specialist ↗</a></p>
+                <p><a href="#">Find an Apple Store ↗</a></p>
+            </div>
+        </header>
+
+        <nav class="categories">
+            <div class="category-item">
+                <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-13-mac-nav-202603?wid=400&hei=260&fmt=png-alpha&.v=M1Q3OGxnb1lBaHhqNjZ2OVRXZmx4V2duSGVkdTVncGZYc0RnS1paU3IySCsrUlZaSVRoWVYzU0Qra0FoTmUwNng2bitObzZwQzk4cEorV1dZdzhIazAreDNWYWNLK1lESGRXY25VRzdWVTQ" alt="Mac Device" class="device-img">
+                <span class="category-text">Mac</span>
+            </div>
+            <div class="category-item">
+                <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-13-iphone-nav-202509?wid=400&hei=260&fmt=png-alpha&.v=dW5XbHI1eDVpd01qWUU4bFRtWGZXM1doT212VzJoWjBSKzRpbmNETHN1QjVoZlhhY1p4QWdsTjFNaGRHM3FYWW15d1FhSDJ0bkR0ZGZtUjZJNmFveGVEVGM2Z3VEVWcvT3Z6KzhkR29Ddmc" alt="iPhone Device" class="device-img">
+                <span class="category-text">iPhone</span>
+            </div>
+            <div class="category-item">
+                <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-13-ipad-nav-202405?wid=400&hei=260&fmt=png-alpha&.v=dW5XbHI1eDVpd01qWUU4bFRtWGZXNGFLQTJVNnlNQmQrVmRBYnZYei9jckUzelNmMnRxajE0NHhmMWtLazl6eG53M0FRZHBXNTh1U1lFVEtSR2YzTm5qbE56RWRpRFNIRXZvbkd2S0l5dTg" alt="iPad Device" class="device-img">
+                <span class="category-text">iPad</span>
+            </div>
+            <div class="category-item">
+                <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-13-watch-nav-202509_GEO_IN?wid=400&hei=260&fmt=png-alpha&.v=S0tSVzBtSkRkSFFhMm1zS1NmeWtkK0gvNGFhODF5SWpidW9tVnFmL2IrcnZGQmhUaHlPN016cFdzNFJtZThkQ2M5THdmR1U4Nmp4b2NFbEg2N21UQzYzZVFZZGtHNUI4c1NvME1xTTYxSzZ1ZUVMek0rc2U0U3QwOE5USS9PYTQ" alt="Apple Watch Device" class="device-img">
+                <span class="category-text">Apple Watch</span>
+            </div>
+            <div class="category-item">
+                <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-13-airpods-nav-202509?wid=400&hei=260&fmt=png-alpha&.v=Q0Z1bWFqMUpRRnp3T0Y0VWJpdk1yMDhFUStvWHB3SDlDa3VrdUZORWRqeld1aTN5QlRYNG5PRjJxc2d1RklXbVM0TjRWdzF2UjRGVEY0c3dBQVZ6VGZUMjJQZFhhT2thWmkxZjhra3FyZEk" alt="AirPods Device" class="device-img">
+                <span class="category-text">AirPods</span>
+            </div>
+            <div class="category-item">
+                <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-13-airtags-nav-202601_GEO_IN?wid=400&hei=260&fmt=png-alpha&.v=Q0Z1bWFqMUpRRnp3T0Y0VWJpdk1yL1FqZ2pobDV2bDUyWU1XVmNnMmx3UUdvUzdNVnRJWFZUbkZkSEFxU1M1YWlRT3o4dCtSOG5URzZBQk51WVJZNG1ZT05aMG1qOXJGam1odE5PQXNEK3hoZmhNRWMyTWI4VWg3NDM1QXBxeWs" alt="AirTag Device" class="device-img">
+                <span class="category-text">AirTag</span>
+            </div>
+            <div class="category-item">
+                <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-13-appletv-nav-202210?wid=400&hei=260&fmt=png-alpha&.v=T0wvM1N3YUcxQ09qK0VNRkl1RU1BZFM5WnN0RmVZRmVXQ0FCUWJjbnJDald1aTN5QlRYNG5PRjJxc2d1RklXbVM0TjRWdzF2UjRGVEY0c3dBQVZ6VFZ3YmJrVi9SakQxWUcrYWQwVXc5VTA" alt="Apple TV 4K Device" class="device-img">
+                <span class="category-text">Apple TV 4K</span>
+            </div>
+            <div class="category-item">
+                <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-13-homepod-nav-202301?wid=400&hei=260&fmt=png-alpha&.v=WVcvamRucHVMMWs5SXZ3bVJ3Q2hpZGR0czFXNWdCUW14eTN2U29pLzNMcld1aTN5QlRYNG5PRjJxc2d1RklXbVM0TjRWdzF2UjRGVEY0c3dBQVZ6VFJmbWU0TjJLamxsdTltNkZVZ1RhbDA" alt="HomePod Device" class="device-img">
+                <span class="category-text">HomePod</span>
+            </div>
+            <div class="category-item">
+                <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-13-accessories-nav-202603?wid=400&hei=260&fmt=png-alpha&.v=QnhsNk96S0o4R1dkN2FveStNM1hwNzZGMHVrNGw2NTM5Vmk2bHZzMXQ3aUlac2ROMkdFNG0rMXdMQ0t2WTVlSFBrcjVFNVdueFRVbVY3TGtiL2RjUWVXQ0tWTWFGNXA2NmlzMmRVQ1l6WmlFMHVWQmxPTEFhTVNvVStGSjlxajM" alt="Accessories" class="device-img">
+                <span class="category-text">Accessories</span>
+            </div>
+        </nav>
+
+
+        <section class="latest-section">
+            <h2 class="section-header">The latest. <span>Take a look at what's new right now.</span></h2>
+            
+            <div class="cards-container">
+                <div class="card dark">
+                    <div class="card-content">
+                        <h3>iPhone 17 Pro</h3>
+                        <p class="desc">All out Pro.</p>
+                        <p class="price">From ₹134900.00*</p>
+                    </div>
+                    <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-40-iphone-17-pro-202509?wid=800&hei=1000&fmt=jpeg&qlt=90&.v=UzBXQnlhUWdraTNvNU1Kb3pEQlpXQjVOVStZaG1ncWFjNXVUZkZ4anVIYlNab1lJcUZwSFVRK1htYlNmZUtPTG54cStVNU5BQmhzbkxYRGxDWUc3R2RBR0JWVHBRN0NKVm11SFZzeU45T2VCTXFJbjVIbEFUN05pTHFFYldZYzg" alt="iPhone 17 Pro" class="product-img">
+                </div>
+
+                <div class="card light">
+                    <div class="card-content">
+                        <div class="card-tag">New</div>
+                        <h3>MacBook Neo</h3>
+                        <p class="desc">The magic of Mac at a surprising price.</p>
+                        <p class="price">From ₹69900.00*</p>
+                    </div>
+                    <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-40-macbook-neo-202603?wid=800&hei=1000&fmt=jpeg&qlt=90&.v=MjhMcWJ2MGZwbXEwdnBkcUN6ZnhyMENkWWUxVnpsancwa2o0MWNIbE5maHFTRjNxbmh1UnU2R29ibGdpZUFXcy85S3R4M0M3WGhIQVNOK3lBdUI5K1FXa3hqWStLWVR2OTJXWDRleXhWMk1OZnVPWGRXSForVW95dWNpSkZQMzM" alt="MacBook Neo" class="product-img" style=" width: 90%;">
+                </div>
+
+                <div class="card light">
+                    <div class="card-content">
+                        <div class="card-tag">New</div>
+                        <h3>iPhone 17e</h3>
+                        <p class="desc">Feature stacked. Value packed.</p>
+                        <p class="price">From ₹64900.00*</p>
+                    </div>
+                    <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-40-iphone-17e-202603?wid=800&hei=1000&fmt=jpeg&qlt=90&.v=UzBXQnlhUWdraTNvNU1Kb3pEQlpXSWR4NURmaFZzeVFCV2YrK0tMRnRIam45S05qekNUdVUwMVFyK1pKaERUd2JGcXNRQnFCV0w3WVRjTExvdm1ic2FLdHJsdDVjbmVudndGelN0a3hvL21IaWV5SG1KWWRSb1RMSkNqUDJYZHY" alt="iPhone 17e" class="product-img" style="bottom: -20px; max-width: 280px;">
+                </div>
+
+                <div class="card light">
+                    <div class="card-content">
+                        <div class="card-tag">New</div>
+                        <h3>AirPods Max 2</h3>
+                        <p class="desc">New intelligent features.<br>More immersive listening.</p>
+                        <p class="price">₹67900.00*</p>
+                    </div>
+                    <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-40-airpods-max-202409?wid=800&hei=1000&fmt=jpeg&qlt=90&.v=WlczMnlkejNQakk5eW14MEJjQmdLd0hoakxSaUU2WUtGRGZ1cmhVSERsRnFTRjNxbmh1UnU2R29ibGdpZUFXcy85S3R4M0M3WGhIQVNOK3lBdUI5K1ZmUGloekNrNzNVVjl0RDVkUy9sYWQxWnZFQ2ozaVJXS3R0eUNrSXRjUEo" alt="AirPods Max 2" class="product-img" style="bottom: 10px;">
+                </div>
+            </div>
+        </section>
+
+        <section class="difference-section">
+            <h2 class="section-header">The Apple Store difference. <span>Even more reasons to shop with us.</span></h2>
+            
+            <div class="diff-cards-container">
+                <div class="diff-card">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1f8b3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <h4>No Cost EMI. <span style="font-weight: 400;">Plus Instant Cashback.</span></h4>
+                </div>
+                
+                <div class="diff-card">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#0066cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                    <h4><span class="txt-blue">Exchange your smartphone,</span> <span style="font-weight: 400;">get ₹3100.00-₹62700.00 in credit towards a new one.</span></h4>
+                </div>
+
+                <div class="diff-card">
+                    <svg width="32" height="32" viewBox="0 0 384 512" fill="url(#apple-grad)">
+                        <defs>
+                            <linearGradient id="apple-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#ff3b30"/>
+                                <stop offset="100%" stop-color="#ff9500"/>
+                            </linearGradient>
+                        </defs>
+                        <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.3 48.6-.3 76.5-70.1 94.3-108.3-43-20.9-53.7-65.7-53.4-102.3zM196.4 85.3c15.2-18.4 28.5-44.9 25.5-71.1-22.1 1-49 14.6-64.8 33.5-13.3 15.8-28.5 43.1-24.8 68.6 24.3 1.9 50.4-11 64.1-31z"/>
+                    </svg>
+                    <h4 class="txt-gradient">Customise your Mac.</h4>
+                </div>
+
+                <div class="diff-card">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#bf48ba" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                        <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                        <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                    </svg>
+                    <h4>Make them yours. <br><span class="txt-purple" style="font-weight: 400;">Engrave a mix of emoji, names and numbers for free.</span></h4>
+                </div>
+
+                <div class="diff-card">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1f8b3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="1" y="3" width="15" height="13"></rect>
+                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                        <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                        <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                    </svg>
+                    <h4><span class="txt-green">Enjoy free delivery, or easy pickup</span> <span style="font-weight: 400;">from an Apple Store.</span></h4>
+                </div>
+            </div>
+        </section>
+
+        <section class="help-section">
+            <h2 class="section-header">Help is here. <span>Whenever and however you need it.</span></h2>
+            
+            <div class="help-cards-container">
+                <div class="help-card">
+                    <div class="help-card-content">
+                        <h3>Shop with a Specialist over video.</h3>
+                        <p>Choose your next device in a guided, one-way video session.</p>
+                    </div>
+                    <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-50-specialist-video-202601_GEO_IN?wid=1920&hei=2000&fmt=p-jpg&qlt=95&.v=TkJLQU9OWTZMS1N4dlhoOWl3SEhrYnlpTHAvaU1TZWJjTXg3K2FoelBrWTYyYkZjcU54ZHV5QlBIZC9ZYXBSeWRmR3FCR0RFOUxRaFRnRlFCZ3VGRytCc3FjamJwVXJjd2U3WEc3Smc2MXlrUmY3SmlYTGdyV1pXSkxqblBCMTdmbW94YnYxc1YvNXZ4emJGL0IxNFp3" alt="Video Call" class="help-img" style="height: 75%; object-fit: contain;">
+                </div>
+
+                <div class="help-card">
+                    <div class="help-card-content">
+                        <div class="help-tag">APPLE SPECIALIST</div>
+                        <h3>Shop one on one with a Specialist online.</h3>
+                    </div>
+                    <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-50-earth-day-specialist-help-202605?wid=4000&hei=4167&fmt=p-jpg&qlt=95&.v=cHZTdEJURVNIcmNmcWQ1YlUyV2pSZmZ6Q2ZTaDM0dDFtQTRQZitiSUxoQmpCaFdKTDFwWlcvbHNmcWRZbzhPYVQ1SVRRZnoyY2xiVHFIbFpnUnJwcmJKaWduWDhrL3RFTDJVSS83Tk9MYXRHZ3FucnBqOHB0SEpBcVNBVTBuVE9EWDdqbDNWaDJmbEtNcm5JaVJUOTl3" alt="Apple Specialist" class="help-img">
+                </div>
+
+                <div class="help-card">
+                    <div class="help-card-content">
+                        <div class="help-tag">Today at Apple</div>
+                        <h3>Explore Apple Intelligence</h3>
+                        <p>Come and try it for yourself in a free session at the Apple Store.</p>
+                    </div>
+                    <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-50-taa-ai-202604?wid=960&hei=1000&fmt=p-jpg&qlt=95&.v=cFEvalhFakpZVzg4RFZsWktqbXFNYnZ0eGJDYUF3MFBoaDZXSkNFUHdVMGYzUHRVc053YldlK2NuZForb0M1V0tRNjVHZTlIV04vVjZjbEh0Rm5SY3lUYnhvZ1E5cUxEbkpTSXJFc0NYcVU" alt="Apple Store Session" class="help-img">
+                </div>
+            </div>
+        </section>
+
+        <section class="accessories-section">
+            <h2 class="section-header">Accessories. <span>Essentials that pair perfectly with your favourite devices.</span></h2>
+            
+            <div class="cards-container">
+                <div class="card light">
+                    <div class="card-content">
+                        <h3>Here and wow.</h3>
+                        <p class="desc">The accessories you love.<br>In a fresh mix of colours.</p>
+                    </div>
+                    <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-40-accessories-202603?wid=800&hei=1000&fmt=jpeg&qlt=90&.v=K1NBYnFSRndoRHEyUklJLyttMlQ2Q3VHZXZxTHRzMW5POGhRK2NXNW1VeHFTRjNxbmh1UnU2R29ibGdpZUFXcy85S3R4M0M3WGhIQVNOK3lBdUI5K1Uva2FEdFN5bEdHUXd4RXIrS1dhS3ZMQ2gzYU14VEs0V1BFdWdmdWl3NGg" alt="Mixed Accessories" class="product-img" style="bottom: 10px;">
+                </div>
+
+                <div class="card light card-product">
+                    <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/MHW04?wid=400&hei=400&fmt=jpeg&qlt=90&.v=OWtwNFlkMFZJVmFHU0ZnV2VVVVkvdllvYS9naDJJdU9KTWdGWjhKWFRmS1hyTy9uZ2N1SXFsMUcxRkU5VGJjaEhRZGE3MTNJQzBIbjNLQzRGNkZTNWc" alt="Silicone Case" class="product-img-center">
+                    <div class="swatches">
+                        <div class="swatch" style="background-color: #ffbba1;"></div>
+                        <div class="swatch" style="background-color: #e0f2b3;"></div>
+                        <div class="swatch" style="background-color: #3b3b3b;"></div>
+                        <div class="swatch" style="background-color: #8c8c8c;"></div>
+                        <div class="swatch" style="background-color: #72402e;"></div>
+                    </div>
+                    <div class="card-content-bottom">
+                        <div class="card-tag">New</div>
+                        <h4>iPhone 17 Pro Silicone Case with MagSafe – Bright Guava</h4>
+                        <p class="price">MRP ₹4900.00 (Incl. of all taxes)</p>
+                    </div>
+                </div>
+
+                <div class="card light card-product">
+                    <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/MHYX4?wid=400&hei=400&fmt=jpeg&qlt=90&.v=QjNFQ2t2ZDFUTUFjQTRxUVFabGZ4ZllvYS9naDJJdU9KTWdGWjhKWFRmS2FYdGFuZ3VBL21jSTR5eStienlZL2FDaUlKdm12V2dDSTBGalM0MEJIS0E" alt="Crossbody Strap" class="product-img-center">
+                    <div class="swatches">
+                        <div class="swatch" style="background-color: #ffbba1;"></div>
+                        <div class="swatch" style="background-color: #e0f2b3;"></div>
+                        <div class="swatch" style="background-color: #3b3b3b;"></div>
+                        <div class="swatch" style="background-color: #a8d5e2;"></div>
+                        <div class="swatch" style="background-color: #eaeaea;"></div>
+                    </div>
+                    <div class="card-content-bottom">
+                        <div class="card-tag">New</div>
+                        <h4>Crossbody Strap - Bright Guava</h4>
+                        <p class="price">MRP ₹5900.00 (Incl. of all taxes)</p>
+                    </div>
+                </div>
+
+                <div class="card light card-product">
+                    <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/MGPG4?wid=400&hei=400&fmt=jpeg&qlt=90&.v=Sml1aUlKZ3BBVnQ2MmgzRnB4Wi9jUFlvYS9naDJJdU9KTWdGWjhKWFRmTHI1T3Rua2ZCWEpxaXFZS01CYzFXdklaY0ZqN3p4QnhWMWFIdUloZmtPOGc" alt="MagSafe Charger" class="product-img-center">
+                    <div class="card-content-bottom">
+                        <div class="card-tag" style="opacity: 0;">Spacer</div>
+                        <h4>MagSafe Charger (1m)</h4>
+                        <p class="price">MRP ₹4500.00 (Incl. of all taxes)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="audio-section">
+            <h2 class="section-header">Loud and clear. <span>Unparalleled choices for rich, high-quality sound.</span></h2>
+            
+            <div class="cards-container">
+                <div class="card light">
+                    <div class="card-content">
+                        <h3>Get 3 months of<br>Apple Music free.</h3>
+                        <p class="desc" style="font-size: 14px;">Included with the purchase of selected Apple devices.*</p>
+                    </div>
+                    <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-40-apple-music-202509?wid=800&hei=1000&fmt=p-jpg&qlt=95&.v=REFqMnc0RUtNcWNBem5LRlFGZ25lZDA2cHF6SXV4ckNWYnFUOUZLbDdhdHFTRjNxbmh1UnU2R29ibGdpZUFXc0prY3crUWRsN1dqVjRnMHR5S1hVblA5cThJWHhkRERtVkYrVllZWnRyZEtNaXNLODV0dGVXcTFKcm95Yld5UnM" alt="Apple Music Promo" class="product-img" style="bottom: 0;">
+                </div>
+
+                <div class="card light card-product">
+                    <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/airpods-max-select-202409-midnight?wid=400&hei=400&fmt=jpeg&qlt=90&.v=azQxRkVJKzd6V3J0aGNqWFhLMzBmdmVWNWdHYnp5cHkwMldsSElEOHpydzZxenl2STByZjdmUGYvR3dmM2RON01LWlMyVmEreEd6UVBWaXRHdkpLMWppQWdEZjVIVUoweGVCQnUrWEowU1ZhN1ZHY2VKVGQ4Nmx6UkdSNXd0OGI" alt="AirPods Max" class="product-img-center">
+                    <div class="card-content-bottom">
+                        <div class="card-tag" style="opacity: 0;">Spacer</div>
+                        <h4>AirPods Max</h4>
+                        <p class="price">MRP ₹59900.00 (Incl. of all taxes)</p>
+                    </div>
+                </div>
+
+                <div class="card light card-product">
+                    <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/airpods-pro-3-hero-select-202509?wid=400&hei=400&fmt=jpeg&qlt=90&.v=cmp4MmZ6OWxOeHNNTXh4SzlBNUpEb1RucE9zZTI5eEREaWZpY29lSld3eVRLNDVIb25yeWxTSzhxdXNNaFBBZmJGcXNRQnFCV0w3WVRjTExvdm1ic1YxRUxFRmRlWDBITzhnRmZ5OTRmaVdKTExiOEFsRmxtQ2Nua0tRSC83MkI" alt="AirPods Pro" class="product-img-center">
+                    <div class="card-content-bottom">
+                        <div class="card-tag" style="opacity: 0;">Spacer</div>
+                        <h4>AirPods Pro 2</h4>
+                        <p class="price">MRP ₹24900.00 (Incl. of all taxes)</p>
+                    </div>
+                </div>
+
+                <div class="card light card-product">
+                    <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/MX743?wid=400&hei=400&fmt=jpeg&qlt=90&.v=d1RLSDZzQTRtK1UxZmVlUFRKNGgvZllvYS9naDJJdU9KTWdGWjhKWFRmSjNqeEcvVzZaaVU2a3ptRnN4aU8wUGovUE9KcXhKNTlHR1RBR2lHbUtXcWc" alt="Powerbeats Pro" class="product-img-center">
+                    <div class="card-content-bottom">
+                        <div class="card-tag" style="opacity: 0;">Spacer</div>
+                        <h4>Powerbeats Pro</h4>
+                        <p class="price">MRP ₹21900.00 (Incl. of all taxes)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="experience-section">
+            <h2 class="section-header">The Apple experience. <span>Do even more with Apple products and services.</span></h2>
+            
+            <div class="cards-container">
+                <div class="card light">
+                    <div class="card-content">
+                        <h3><span class="txt-ai-gradient">Apple Intelligence.</span><br>Create, communicate and get things done effortlessly.²</h3>
+                    </div>
+                    <img width="200" src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-50-apple-intelligence-202510_GEO_IN?wid=960&hei=1000&fmt=p-jpg&qlt=95&.v=SFNxMjRYSTFLdjBJZG1UYjBKRUNDalZCM0g0MTRQL0NONjZoQUpUNEpyYnpybDJDTkxJazk3YkRwNEZXWXZBYkNJWGJVR3BNa0NheTNxZUJ3blJNRk1mSGN3NTUxbDRHZDZXK1V3b1o4a1JSUHRmWUg0WEE2WGdIZWhVc1k1bmpsWG55WFNZREIrcHRwdlRvMGw2S3BR" alt="Apple Intelligence Devices" class="product-img" style="bottom: 0;">
+                </div>
+
+                <div class="card light">
+                    <div class="card-content">
+                        <div class="card-tag" style="color: #686870;">APPLE STORE APP</div>
+                        <h3>Put your bow on it.</h3>
+                        <p class="desc" style="font-size: 14px;">Make the gift unmistakably theirs with a personalised message created especially for them.</p>
+                    </div>
+                    <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-40-holiday-gifting-202512?wid=800&hei=1000&fmt=p-jpg&qlt=95&.v=VXNuZmVZU0R3VzJZalF2dFJTeUN3N0FnNjZ5b3VuRHdiZ0w2a3JLMHRPMytjMHlOSllWaUF4RHRmU1JETWwvWnFmS3YvQ0doSFZENndQR0J4TTRqbjV0VnRTbFBkWnJlc1BPQlB5bDBMSENGREFZSmxrYThHNjlsalVwb3Bsd2o" alt="Engraved AirPods" class="product-img">
+                </div>
+
+                <div class="card light">
+                    <div class="card-content">
+                        <h3>Four Apple services. One easy subscription.</h3>
+                    </div>
+                    <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-50-subscriptions-202605_GEO_IN?wid=960&hei=1000&fmt=p-jpg&qlt=95&.v=WW05TjdlcC83b2p3NDlrR3ZVbk1xYk4zaUxnUFVTeUlGeUNxWkhYTVpQc0FsMHoxM0U0MXF3Sm85YmlTZ2lGV2VEb1lRcjg2U0o3bTMvMkR2S2VvTmt2aHJVVVRvS3hUQ0EwVk8wak9Ka0ZFU1hOVXZVandTVjB6c2NYOG10Z2E" alt="Apple Services" class="product-img" style="bottom: 40px; object-fit: contain;">
+                </div>
+
+                <div class="card light">
+                    <div class="card-content">
+                        <h3>We've got you covered.</h3>
+                        <p class="desc" style="font-size: 14px;">AppleCare+ now comes with unlimited repairs for accidental damage protection.</p>
+                    </div>
+                    <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-50-applecare-202509?wid=960&hei=1000&fmt=p-jpg&qlt=95&.v=SFNxMjRYSTFLdjBJZG1UYjBKRUNDaWpFK3ZkdGswQVhNcFBueHYrelVWQUloZHRRYWt5UUpyTGVwNEhDZEV3VXg4ZHpEbm5XWGdaM3BiNVRDaG55UkxUT1dhcDhtU1FobVVubzZnek95bXhBU25Ob2N5dVQyQmxkN0IyWWVHdW0" alt="AppleCare+" class="product-img" style="bottom: 20px;">
+                </div>
+            </div>
+        </section>
+
+        <section class="savings-section">
+            <h2 class="section-header">Savings and offers. <span>Exclusive deals, special stores and more.</span></h2>
+            
+            <div class="cards-container">
+                <div class="card light">
+                    <div class="card-content">
+                        <div class="card-tag" style="color: #1d1d1f;">EDUCATION</div>
+                        <h3>Save on a new Mac, iPad and Apple Watch with education pricing.±</h3>
+                    </div>
+                    <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/store-card-40-education-202605?wid=800&hei=1000&fmt=p-jpg&qlt=95&.v=TysyM3c4L0xvQ1dZWVNWTXZ0ekxPTlVUNDdLczRTWHR5WE9ncHJGK2xwMzkvamYzRzRvcFlnajNacmhEOC9BeHg4ZHpEbm5XWGdaM3BiNVRDaG55UkpoSTRoODlLK2NFNmp4c0hWV3d4VCs1dDgvV3BhU1hoSzFPUEZjam5HQ2g" alt="Education Pricing" class="product-img" style="bottom: 0;">
+                </div>
+            </div>
+        </section>
+
+        <section class="quick-links-section">
+            <h2 class="section-header">Quick Links</h2>
+            <div class="pill-container">
+                <a href="#" class="pill-btn">Find a Store</a>
+                <a href="#" class="pill-btn">Order Status</a>
+                <a href="#" class="pill-btn">Shopping Help</a>
+                <a href="#" class="pill-btn">Your Saves</a>
+            </div>
+        </section>
+
+        <section class="footnotes-section">
+        <p>◊ No Cost EMI is available with the purchase of an eligible product made using qualifying cards on 3- or 6-month tenures from most leading card issuers. Monthly pricing is rounded to the nearest rupee. Exact pricing will be provided by your card issuer, subject to your card issuer's terms and conditions. Minimum order spend applies as per your card issuer's threshold. No Cost EMI is not available to Business customers and cannot be combined with Apple Store for Education or Corporate Employee Purchase Plan pricing. Card eligibility is subject to terms and conditions between you and your card issuer. Offer may be revised or withdrawn at any time without any prior notice. <a href="#">Terms apply.</a></p>
+            
+            <p>Δ Instant cashback is available with the purchase of an eligible product with qualifying American Express, Axis Bank and ICICI Bank cards only. Minimum transaction value of ₹10001.00 applies. Learn more about instant cashback amounts and eligible devices. Instant cashback is available for up to two orders per rolling 90-day period with an eligible card. Card eligibility is subject to terms and conditions between you and your card issuer. Total transaction value is calculated after any trade-in credit or eligible discount is applied. Any subsequent order adjustment(s) or cancellation(s) may result in instant cashback being recalculated, and any refund may be adjusted to account for instant cashback clawback; this may result in no refund being made to you. Offer may be revised or withdrawn at any time without any prior notice. <a href="#">Additional terms apply.</a> Instant cashback is not available to Business customers and cannot be combined with Apple Store for Education or Corporate Employee Purchase Plan pricing. Multiple separate orders cannot be combined for instant cashback.</p>
+            
+            <p>± Available to current and newly accepted college students, parents buying for college students, and teachers and staff at all levels. See <a href="#">Terms</a> for more information.</p>
+            
+            <p>† Listed pricing is Maximum Retail Price (inclusive of all taxes).</p>
+            
+            <p>* Mac, iPad and Apple Watch trade-in is available only in-store in India. Apple Retail Online in India does not offer trade-in for Mac, iPad and Apple Watch. Trade-in values will vary based on the condition, year and configuration of your eligible trade-in device. Not all devices are eligible for credit. You must be at least the age of majority to be eligible to trade in for credit. Trade-in value may be applied towards a qualifying new device purchase. Actual value awarded is based on receipt of a qualifying device matching the description provided when estimate was made. Sales tax may be assessed on full value of a new device purchase. In-store trade-in requires presentation of a valid photo ID (local law may require saving this information). Some stores may have additional requirements. Apple or its trade-in partners reserve the right to refuse, cancel or limit the quantity of any trade-in transaction for any reason. More details are available from Apple's trade-in partner for trade-in and recycling of eligible devices. Restrictions and limitations may apply.</p>
+            
+            <p>° New subscribers only. ₹119.00/month after trial. Offer is available for new Apple Music subscribers with a new eligible device for a limited time only. Offer redemption for eligible audio devices requires connecting or pairing to an Apple device running the latest iOS or iPadOS. Offer redemption for Apple Watch requires connecting or pairing to an iPhone running the latest iOS. Offer good for three months after eligible device activation. Only one offer per Apple Account, regardless of the number of eligible devices you purchase. Plan automatically renews until cancelled. Restrictions and other <a href="#">terms</a> apply.</p>
+            
+            <p>‡ Monthly pricing is after purchase using EMI with qualifying cards at 15.99% p.a. over a 6-month tenure. Monthly pricing is rounded to the nearest rupee. Exact pricing will be provided by your card issuer, subject to your card issuer's terms and conditions.</p>
+            
+            <p>1. Special pricing available to qualified customers. To learn more about how to start qualifying for special pricing, talk to an Apple Specialist in a store or give us a call on 000800 040 1966.</p>
+            
+            <p>2. Apple Intelligence is available in beta. Some features may not be available in all regions or languages. For feature and language availability and system requirements, see <a href="#">support.apple.com/121115</a>.</p>
+            
+            <p>We use your location to show you delivery options faster. We found your location using your IP address or because you entered it during a previous visit to Apple.</p>
+        </section>
+
+        <footer class="apple-footer">
+            <div class="footer-breadcrumb">
+                <span style="font-size: 16px;"></span> <span>&gt;</span> <span>Apple Store Online</span>
+            </div>
+
+            <div class="footer-directory">
+                <div class="footer-col">
+                    <h4>Shop and Learn</h4>
+                    <ul>
+                        <li><a href="#">Store</a></li>
+                        <li><a href="#">Mac</a></li>
+                        <li><a href="#">iPad</a></li>
+                        <li><a href="#">iPhone</a></li>
+                        <li><a href="#">Watch</a></li>
+                        <li><a href="#">AirPods</a></li>
+                        <li><a href="#">TV & Home</a></li>
+                        <li><a href="#">AirTag</a></li>
+                        <li><a href="#">Accessories</a></li>
+                        <li><a href="#">Gift Cards</a></li>
+                    </ul>
+                    <h4>Apple Wallet</h4>
+                    <ul>
+                        <li><a href="#">Wallet</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Account</h4>
+                    <ul>
+                        <li><a href="#">Manage Your Apple Account</a></li>
+                        <li><a href="#">Apple Store Account</a></li>
+                        <li><a href="#">iCloud.com</a></li>
+                    </ul>
+                    <h4>Entertainment</h4>
+                    <ul>
+                        <li><a href="#">Apple One</a></li>
+                        <li><a href="#">Apple TV+</a></li>
+                        <li><a href="#">Apple Music</a></li>
+                        <li><a href="#">Apple Arcade</a></li>
+                        <li><a href="#">Apple Podcasts</a></li>
+                        <li><a href="#">Apple Books</a></li>
+                        <li><a href="#">App Store</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Apple Store</h4>
+                    <ul>
+                        <li><a href="#">Find a Store</a></li>
+                        <li><a href="#">Genius Bar</a></li>
+                        <li><a href="#">Today at Apple</a></li>
+                        <li><a href="#">Apple Summer Camp</a></li>
+                        <li><a href="#">Ways to Buy</a></li>
+                        <li><a href="#">Apple Trade In</a></li>
+                        <li><a href="#">Recycling Programme</a></li>
+                        <li><a href="#">Order Status</a></li>
+                        <li><a href="#">Shopping Help</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>For Business</h4>
+                    <ul>
+                        <li><a href="#">Apple and Business</a></li>
+                    </ul>
+                    <h4>For Education</h4>
+                    <ul>
+                        <li><a href="#">Apple and Education</a></li>
+                        <li><a href="#">Shop for Education</a></li>
+                        <li><a href="#">Shop for College</a></li>
+                    </ul>
+                    <h4>For Healthcare</h4>
+                    <ul>
+                        <li><a href="#">Apple in Healthcare</a></li>
+                        <li><a href="#">Health on Apple Watch</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Apple Values</h4>
+                    <ul>
+                        <li><a href="#">Accessibility</a></li>
+                        <li><a href="#">Environment</a></li>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Supply Chain</a></li>
+                    </ul>
+                    <h4>About Apple</h4>
+                    <ul>
+                        <li><a href="#">Newsroom</a></li>
+                        <li><a href="#">Apple Leadership</a></li>
+                        <li><a href="#">Career Opportunities</a></li>
+                        <li><a href="#">Investors</a></li>
+                        <li><a href="#">Ethics & Compliance</a></li>
+                        <li><a href="#">Events</a></li>
+                        <li><a href="#">Contact Apple</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-base">
+                <div class="shop-ways">
+                    More ways to shop: <a href="#">Find an Apple Store</a> or <a href="#">other retailer</a> near you. Or call 000800 040 1966.
+                </div>
+                <div class="legal-row">
+                    <div class="copyright">Copyright © 2026 Apple Inc. All rights reserved.</div>
+                    <div class="legal-links">
+                        <a href="#">Privacy Policy</a> <span>|</span>
+                        <a href="#">Terms of Use</a> <span>|</span>
+                        <a href="#">Sales Policy</a> <span>|</span>
+                        <a href="#">Legal</a> <span>|</span>
+                        <a href="#">Site Map</a>
+                    </div>
+                    <div class="locale">
+                        <a href="#">India</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+</body>
+</html>
